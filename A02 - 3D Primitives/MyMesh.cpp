@@ -276,7 +276,26 @@ void MyMesh::GenerateCone(float a_fRadius, float a_fHeight, int a_nSubdivisions,
 	Init();
 
 	// Replace this with your code
-	GenerateCube(a_fRadius * 2.0f, a_v3Color);
+	vector3 top = vector3(0,0,0);
+	std::vector<vector3> verts;
+
+	for (int i = 0; i < a_nSubdivisions; i++) {	//Get all of the points on the 2D circle.
+		double angle = 2 * PI * i / a_nSubdivisions;	//Angle between vertices (based on subdivisions)
+		double x = cosf(angle) * a_fRadius;	//Get xPosition
+		double z = sinf(angle) * a_fRadius;	//Get zPosition
+		verts.push_back(vector3(x,top.y-a_fHeight,z));	//Add the bottom face center point.
+	}
+
+	for (int ii = 0; ii < a_nSubdivisions; ii++) {	//Crate the face triangles
+		if (ii == a_nSubdivisions-1) {	//This is to wrap the sides back around to the front again.
+			AddTri(verts[ii],top, verts[0]);	//Side faces
+			AddTri(verts[ii], verts[0], vector3(0, top.y - a_fHeight, 0));	//Bottom face
+		}
+		else {
+			AddTri(verts[ii], top, verts[ii + 1]);	//Side Faces
+			AddTri(verts[ii], verts[ii+1], vector3(0, top.y - a_fHeight, 0));	//Bottom face
+		}
+	}
 	// -------------------------------
 
 	// Adding information about color
@@ -300,7 +319,31 @@ void MyMesh::GenerateCylinder(float a_fRadius, float a_fHeight, int a_nSubdivisi
 	Init();
 
 	// Replace this with your code
-	GenerateCube(a_fRadius * 2.0f, a_v3Color);
+	vector3 top = vector3(0, 0, 0);
+	std::vector<vector3> bottomVerts;
+	std::vector<vector3> topVerts;
+
+	for (int i = 0; i < a_nSubdivisions; i++) {	//Get all of the points on the 2D circle.
+		double angle = 2 * PI * i / a_nSubdivisions;	//Angle between vertices (based on subdivions)
+		double x = cosf(angle) * a_fRadius;	//Get xPosition
+		double z = sinf(angle) * a_fRadius;	//Get zPosition
+
+		topVerts.push_back(vector3(x,top.y, z));	//Add top cap point.
+		bottomVerts.push_back(vector3(x, top.y - a_fHeight, z));	//Add bottom cap point.
+	}
+
+	for (int ii = 0; ii < a_nSubdivisions; ii++) {	//Crate the face triangles
+		if (ii == a_nSubdivisions - 1) {	//This is to wrap the sides back around to the front again.
+			AddQuad(bottomVerts[0], bottomVerts[ii], topVerts[0], topVerts[ii]);	//Side face
+			AddTri(topVerts[ii],top, topVerts[0]);	//top face
+			AddTri(bottomVerts[ii], bottomVerts[0], vector3(top.x, top.y - a_fHeight, top.z));	//bottom face
+		}
+		else {
+			AddQuad(bottomVerts[ii+1], bottomVerts[ii], topVerts[ii+1], topVerts[ii]);	//Side face
+			AddTri(topVerts[ii], top, topVerts[ii + 1]);	//top face
+			AddTri(bottomVerts[ii], bottomVerts[ii + 1], vector3(top.x, top.y - a_fHeight, top.z));	//bottom face
+		}
+	}
 	// -------------------------------
 
 	// Adding information about color
@@ -330,7 +373,43 @@ void MyMesh::GenerateTube(float a_fOuterRadius, float a_fInnerRadius, float a_fH
 	Init();
 
 	// Replace this with your code
-	GenerateCube(a_fOuterRadius * 2.0f, a_v3Color);
+	// Replace this with your code
+	vector3 top = vector3(0, 0, 0);
+	std::vector<vector3> bottomInnerVerts;
+	std::vector<vector3> topInnerVerts;
+	std::vector<vector3> bottomOuterVerts;
+	std::vector<vector3> topOuterVerts;
+
+	for (int i = 0; i < a_nSubdivisions; i++) {	//Get all of the points on the 2D circle.
+		double angle = 2 * PI * i / a_nSubdivisions;	//Angle in between vertices (based on subdivisions)
+		double xOuter = cosf(angle) * a_fOuterRadius;	//Get our xPosition of the outer cylinder
+		double zOuter = sinf(angle) * a_fOuterRadius;	//Get our zPosition of the outer cylinder
+		double xInner = cosf(angle) * a_fInnerRadius;	//Get xPosition of the inner cylinder
+		double zInner = sinf(angle) * a_fInnerRadius;	//Get yPosition of the inner cylinder
+
+		//Add starting positions for the cylinder caps.
+		topInnerVerts.push_back(vector3(xInner, top.y, zInner));
+		bottomInnerVerts.push_back(vector3(xInner, top.y - a_fHeight, zInner));
+		topOuterVerts.push_back(vector3(xOuter, top.y, zOuter));
+		bottomOuterVerts.push_back(vector3(xOuter, top.y - a_fHeight, zOuter));
+	}
+
+	for (int ii = 0; ii < a_nSubdivisions; ii++) {	//Crate the face triangles
+		if (ii == a_nSubdivisions - 1) {	//This is to wrap the sides back around to the front again.
+			AddQuad(bottomOuterVerts[0], bottomOuterVerts[ii], topOuterVerts[0], topOuterVerts[ii]);	//Outer Face
+			AddQuad(bottomInnerVerts[ii], bottomInnerVerts[0], topInnerVerts[ii], topInnerVerts[0]);	//Inner Face
+			
+			AddQuad(topOuterVerts[0], topOuterVerts[ii],topInnerVerts[0],topInnerVerts[ii]);	//Top Quad
+			AddQuad(bottomOuterVerts[ii], bottomOuterVerts[0], bottomInnerVerts[ii], bottomInnerVerts[0]);	//Bottom Quad.
+		}
+		else {
+			AddQuad(bottomOuterVerts[ii+1], bottomOuterVerts[ii], topOuterVerts[ii+1], topOuterVerts[ii]);	//Outer Face
+			AddQuad(bottomInnerVerts[ii], bottomInnerVerts[ii+1], topInnerVerts[ii], topInnerVerts[ii+1]);	//Inner Face
+
+			AddQuad(topOuterVerts[ii+1], topOuterVerts[ii], topInnerVerts[ii+1], topInnerVerts[ii]);	//Top Quad
+			AddQuad(bottomOuterVerts[ii], bottomOuterVerts[ii+1], bottomInnerVerts[ii], bottomInnerVerts[ii+1]);	//Bottom Quad.
+		}
+	}
 	// -------------------------------
 
 	// Adding information about color
@@ -386,8 +465,40 @@ void MyMesh::GenerateSphere(float a_fRadius, int a_nSubdivisions, vector3 a_v3Co
 	Release();
 	Init();
 
-	// Replace this with your code
-	GenerateCube(a_fRadius * 2.0f, a_v3Color);
+	vector3 bottomVert(0, a_fRadius * -1, 0);	//Center point at bottom of sphere
+	vector3 topVert(0, a_fRadius, 0);			//Center point at top of sphere
+
+	double angle = 2 * PI / a_nSubdivisions;			//Angle between points (based on subdivisions)
+	double height = (a_fRadius * 2) / (a_nSubdivisions);//height of the sphere
+	double curHeight = 0;								//Keep track of current height.
+	double radius = 0;									//Keep track of the radis at that height.
+
+	std::vector<vector3> verts;
+
+	for (int j = 0; j < a_nSubdivisions - 1; j++)	//Calculate vertices
+	{
+		radius = a_fRadius;						//Default set the radius to the param.
+		curHeight += height;					//Increment the height.
+
+		radius = sqrt(pow(radius, 2) - pow(curHeight + bottomVert.y, 2));	//Calc radius
+
+		for (int i = 0; i <= a_nSubdivisions; i++)	//Create the points for this height (circle)
+		{
+			verts.push_back(vector3(radius * cos(angle * i), curHeight + bottomVert.y, radius * sin(angle * i)));
+		}
+	}
+
+	for (int h = 0; h < a_nSubdivisions; h++)	//Draw sphere caps
+	{
+		verts.push_back(vector3(radius * cos(angle * h), curHeight + bottomVert.y, radius * sin(angle * h)));
+		AddTri(verts[h], verts[h + 1], bottomVert);	//Bottom faces
+		AddTri(verts[h + 1] + vector3(0, height * (a_nSubdivisions - 2), 0), verts[h] + vector3(0, height * (a_nSubdivisions - 2), 0), topVert);	//Top faces
+	}
+
+	for (int k = 0; k < verts.size() - a_nSubdivisions - 2; k++)	//Generace the faces
+	{
+		AddQuad(verts[k + 1], verts[k], verts[k + a_nSubdivisions + 2], verts[k + a_nSubdivisions + 1]);
+	}
 	// -------------------------------
 
 	// Adding information about color
