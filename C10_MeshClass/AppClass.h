@@ -14,6 +14,9 @@ Date: 2017/05
 
 class Application
 {
+	matrix4 m_m4cube = IDENTITY_M4;
+	MyMesh* cube;
+
 	MyMesh* m_pMesh = nullptr;
 	MyMesh* m_pMesh1 = nullptr;
 
