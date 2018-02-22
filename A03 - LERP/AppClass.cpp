@@ -2,7 +2,7 @@
 void Application::InitVariables(void)
 {
 	//Change this to your name and email
-	m_sProgrammer = "Alberto Bobadilla - labigm@rit.edu";
+	m_sProgrammer = "Juri Kiin - jak5125@rit.edu";
 	
 	//Set the position and target of the camera
 	//(I'm at [0,0,10], looking at [0,0,0] and up is the positive Y axis)
@@ -76,6 +76,31 @@ void Application::Display(void)
 		//draw spheres
 		m_pMeshMngr->AddSphereToRenderList(m4Model * glm::scale(vector3(0.1)), C_WHITE);
 	}
+
+	static int counter = 0;
+	static float fPercentage = 0.0f;
+	for (int i = 0; i < m_shapeList.size(); i++) {
+
+		vector3 v3CurrentPos = vector3(0.0f, 0.0f, 0.0f);
+		if (fPercentage <= 1.0f) {
+			v3CurrentPos = glm::lerp(v3CurrentPos, m_uOrbits, fPercentage);
+		}
+		else {
+			if (counter == m_stopsList.size() - 1) {
+				counter = 0;
+			}
+			else {
+				counter++;
+			}
+			fPercentage = 0.0f;
+		}
+		fPercentage += 0.1f;
+
+		matrix4 m4Model = glm::translate(v3CurrentPos);
+		m_pModel->SetModelMatrix(m4Model);
+	}
+
+
 
 	//render list call
 	m_uRenderCallCount = m_pMeshMngr->Render();
