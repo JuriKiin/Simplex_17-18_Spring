@@ -34,6 +34,19 @@ void Application::InitVariables(void)
 	uint uSides = 3; //start with the minimal 3 sides
 	for (uint i = uSides; i < m_uOrbits + uSides; i++)
 	{
+		//Add location positions
+		std::vector<vector3> locations;
+		for (int j = 0; j < i; j++) {	//Get all of the points on the 2D circle.
+			double angle = 2 * PI * j / i;	//Angle between vertices (based on subdivisions)
+			double x = cosf(angle) * fSize;	//Get xPosition
+			double y = sinf(angle) * fSize;	//Get zPosition
+			locations.push_back(vector3(x, y, 0.0f));	//Add the position to the vector.
+		}
+		orbitLocations.push_back(locations);	//Add this vector to our position vectors.
+		indexOfCurrentLocation.push_back(0);	//Init the current position to the start.
+		//Add number of sides in orbit
+		numSidesInOrbit.push_back(i);
+
 		vector3 v3Color = WaveLengthToRGB(uColor); //calculate color based on wavelength
 		m_shapeList.push_back(m_pMeshMngr->GenerateTorus(fSize, fSize - 0.1f, 3, i, v3Color)); //generate a custom torus and add it to the meshmanager
 		fSize += 0.5f; //increment the size for the next orbit
@@ -79,28 +92,36 @@ void Application::Display(void)
 
 	static int counter = 0;
 	static float fPercentage = 0.0f;
-	for (int i = 0; i < m_shapeList.size(); i++) {
+	for (uint i = 0; i < m_uOrbits; i++) {
 
-		vector3 v3CurrentPos = vector3(0.0f, 0.0f, 0.0f);
+		//Get the starting position that we want to lerp from
+		vector3 v3CurrentPos = orbitLocations[i][indexOfCurrentLocation[i]];
+		//If we are still moving towards the next position.
 		if (fPercentage <= 1.0f) {
-			v3CurrentPos = glm::lerp(v3CurrentPos, m_uOrbits, fPercentage);
+			//Lerp between the current location to the next position
+			v3CurrentPos = glm::lerp(orbitLocations[i][indexOfCurrentLocation[i]], orbitLocations[i][(indexOfCurrentLocation[i] + 1) % orbitLocations[i].size()], fPercentage);
 		}
 		else {
-			if (counter == m_stopsList.size() - 1) {
-				counter = 0;
+			//Loop through each index
+			for (uint i = 0; i < indexOfCurrentLocation.size(); i++)
+			{
+				//Increment the currentLocation index
+				indexOfCurrentLocation[i]++;
+				//If we are at the end of our positions, go back to the first.
+				if (indexOfCurrentLocation[i] >= orbitLocations[i].size())
+				{
+					indexOfCurrentLocation[i] = 0;
+				}
 			}
-			else {
-				counter++;
-			}
+			//Increment the counter and reset fPercentage.
+			counter++;
 			fPercentage = 0.0f;
 		}
-		fPercentage += 0.1f;
+		fPercentage += 0.0075f;
 
 		matrix4 m4Model = glm::translate(v3CurrentPos);
-		m_pModel->SetModelMatrix(m4Model);
+		m_pMeshMngr->AddSphereToRenderList(m4Model * glm::scale(vector3(0.25)), C_WHITE);
 	}
-
-
 
 	//render list call
 	m_uRenderCallCount = m_pMeshMngr->Render();

@@ -52,7 +52,7 @@ void Application::Display(void)
 	fTimer += m_pSystem->GetDeltaTime(uClock); //get the delta time for that timer
 
 	//calculate the current position
-	static vector3 v3CurrentPos = vector3(0.0f, 0.0f, 0.0f);;
+	static vector3 v3CurrentPos = vector3(0.0f, 0.0f, 0.0f);
 	
 	//your code goes here
 	static int counter = 0;
