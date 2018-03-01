@@ -26,13 +26,26 @@ void Application::Display(void)
 	ClearScreen();
 
 	static float fPos = 0.0f;
+
+	//Perspective Variables
 	float fovy = 45.0f;
 	float ratio = m_pSystem->GetWindowWidth() / static_cast<float>(m_pSystem->GetWindowHeight());
 	float fNear = 0.01f;
 	float fFar = 1000.0f;
 
+	//Ortho variables
+	//float left = -10.0f;
+	//float right = 10.0f;
+	//float top = 10.0f;
+	//float bottom = -10.0f;
+	float left = m_pSystem->GetWindowWidth() / -10.0f;
+	float right = m_pSystem->GetWindowWidth() / 10.0f;
+	float top = m_pSystem->GetWindowHeight() / -10.0f;
+	float bottom = m_pSystem->GetWindowHeight() / 10.0f;
+
 	matrix4 m4Projection = m_pCameraMngr->GetProjectionMatrix();
 	m4Projection = glm::perspective(fovy, ratio, fNear, fFar);
+	m4Projection = glm::ortho(left, right, bottom, top, fNear, fFar);
 	matrix4 m4View = m_pCameraMngr->GetViewMatrix();
 
 	vector3 v3Position(0, 0, 15);
