@@ -287,6 +287,10 @@ void MyMesh::GenerateCone(float a_fRadius, float a_fHeight, int a_nSubdivisions,
 	}
 
 	for (int ii = 0; ii < a_nSubdivisions; ii++) {	//Crate the face triangles
+
+		//THis is better than having the if statements below!!!!!
+		//AddTri(Origin,PointList[i],PointList[(i+1) % a_nSubdivisions]);
+
 		if (ii == a_nSubdivisions-1) {	//This is to wrap the sides back around to the front again.
 			AddTri(verts[ii],top, verts[0]);	//Side faces
 			AddTri(verts[ii], verts[0], vector3(0, top.y - a_fHeight, 0));	//Bottom face
