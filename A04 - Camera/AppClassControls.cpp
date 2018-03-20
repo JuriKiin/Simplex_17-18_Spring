@@ -67,12 +67,35 @@ void Application::ProcessMouseScroll(sf::Event a_event)
 //Keyboard
 void Application::ProcessKeyPressed(sf::Event a_event)
 {
-	switch (a_event.key.code)
-	{
-	default: break;
-	case sf::Keyboard::Space:
-		break;
+	vector3 vPos = m_pCamera->GetPosition();
+	vector3 target = m_pCamera->GetTarget();
+	vector3 forwardVector = glm::normalize(m_pCamera->GetTarget() - m_pCamera->GetPosition());
+	vector3 rightVector = glm::normalize(glm::cross(forwardVector, m_pCamera->GetUp()));
+	
+	//Keyboard Input
+	if (a_event.key.code == sf::Keyboard::W) {
+		//Set forward and position
+		vPos += forwardVector * movementScalar;
+		target += forwardVector * movementScalar;
 	}
+	if (a_event.key.code == sf::Keyboard::A) {
+		//Set forward and position
+		vPos -= rightVector * movementScalar;
+		target -= rightVector * movementScalar;
+	}
+	if (a_event.key.code == sf::Keyboard::S) {
+		//Set forward and position
+		vPos -= forwardVector * movementScalar;
+		target -= forwardVector * movementScalar;
+	}
+	if (a_event.key.code == sf::Keyboard::D) {
+		//Set forward and position
+		vPos += rightVector * movementScalar;
+		target += rightVector * movementScalar;
+	}
+	m_pCamera->SetTarget(target);
+	m_pCamera->SetPosition(vPos);
+
 	//gui
 	gui.io.KeysDown[a_event.key.code] = true;
 	gui.io.KeyCtrl = a_event.key.control;
@@ -368,7 +391,31 @@ void Application::CameraRotation(float a_fSpeed)
 		fDeltaMouse = static_cast<float>(MouseY - CenterY);
 		fAngleX += fDeltaMouse * a_fSpeed;
 	}
-	//Change the Yaw and the Pitch of the camera
+
+	//Get the forward and right vectors.
+	vector3 forwardVector = glm::normalize(m_pCamera->GetTarget() - m_pCamera->GetPosition());
+	//Right is cross product of forward and up.
+	vector3 rightVector = glm::normalize(glm::cross(forwardVector,m_pCamera->GetUp()));
+
+	//Store the quaternions for each rotation.
+	quaternion rotationX = glm::angleAxis(fAngleX * 2, rightVector);
+	quaternion rotationY = glm::angleAxis(-fAngleY * 2, m_pCamera->GetUp());
+	//COmbine the rotations into a single quaternion.
+	quaternion rot = rotationX * rotationY;
+	//Turn the rotation into a Mat4
+	matrix4 rotMat = glm::toMat4(rot);
+
+	//Create the target vector. (Needs to be v4 so we can apply it from the rotation matrix)
+	vector4 targetv4 = vector4(forwardVector.x, forwardVector.y, forwardVector.z,0.0);
+	targetv4 = targetv4 * rotMat;
+
+	//We need a vec3 again to store for the position.
+	vector3 newTarget = vector3(targetv4.x,targetv4.y,targetv4.z);
+	newTarget = glm::normalize(newTarget) + m_pCamera->GetPosition();
+
+	//Set the new forward vector.
+	m_pCamera->SetTarget(newTarget);
+
 	SetCursorPos(CenterX, CenterY);//Position the mouse in the center
 }
 //Keyboard

@@ -1,11 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-<<<<<<< HEAD
 VisualStudioVersion = 15.0.27130.2024
-=======
-VisualStudioVersion = 15.0.27130.2010
->>>>>>> 5f7f0cc06fa32c9771b5a12b3d654bb698e63070
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Exercises", "Exercises", "{A7E7DB91-6013-4894-B0A8-C254F53E4940}"
 EndProject
@@ -104,15 +100,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "C10_MeshClass_Lecture", "C1
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "E06 - LERP", "E06 - LERP\E06 - LERP.vcxproj", "{822E40D2-80A1-46EB-AD93-EC28C4F145ED}"
 EndProject
-<<<<<<< HEAD
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "E08 - Gimbal Removal", "E08 - Gimbal Removal\E08 - Gimbal Removal.vcxproj", "{C9EC47DA-88D2-4634-8C3F-A23E3B1FAF6D}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "E06 - Projections", "..\..\E09 - Projections\E09 - Projections.vcxproj", "{0BFF89F3-1A79-4B83-A0EB-7C16FDA662E1}"
-=======
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "C15_ProjectionsTaughtInClass", "C15_ProjectionsTaughtInClass\C15_ProjectionsTaughtInClass.vcxproj", "{0D760210-5AB2-4F60-AB46-AA34756861F5}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "E09 - Projections", "E09 - Projections\E09 - Projections.vcxproj", "{0BFF89F3-1A79-4B83-A0EB-7C16FDA662E1}"
->>>>>>> 5f7f0cc06fa32c9771b5a12b3d654bb698e63070
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "E09 - Projections", "E09 - Projections\E09 - Projections.vcxproj", "{17B148BD-8433-4A7D-99E3-828A516C657F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "E06 - Projections", "..\..\E09 - Projections\E09 - Projections.vcxproj", "{0BFF89F3-1A79-4B83-A0EB-7C16FDA662E1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -288,21 +282,24 @@ Global
 		{822E40D2-80A1-46EB-AD93-EC28C4F145ED}.Debug|x86.Build.0 = Debug|Win32
 		{822E40D2-80A1-46EB-AD93-EC28C4F145ED}.Release|x86.ActiveCfg = Release|Win32
 		{822E40D2-80A1-46EB-AD93-EC28C4F145ED}.Release|x86.Build.0 = Release|Win32
-<<<<<<< HEAD
 		{C9EC47DA-88D2-4634-8C3F-A23E3B1FAF6D}.Debug|x86.ActiveCfg = Debug|Win32
 		{C9EC47DA-88D2-4634-8C3F-A23E3B1FAF6D}.Debug|x86.Build.0 = Debug|Win32
 		{C9EC47DA-88D2-4634-8C3F-A23E3B1FAF6D}.Release|x86.ActiveCfg = Release|Win32
 		{C9EC47DA-88D2-4634-8C3F-A23E3B1FAF6D}.Release|x86.Build.0 = Release|Win32
-=======
 		{0D760210-5AB2-4F60-AB46-AA34756861F5}.Debug|x86.ActiveCfg = Debug|Win32
 		{0D760210-5AB2-4F60-AB46-AA34756861F5}.Debug|x86.Build.0 = Debug|Win32
 		{0D760210-5AB2-4F60-AB46-AA34756861F5}.Release|x86.ActiveCfg = Release|Win32
 		{0D760210-5AB2-4F60-AB46-AA34756861F5}.Release|x86.Build.0 = Release|Win32
->>>>>>> 5f7f0cc06fa32c9771b5a12b3d654bb698e63070
+		{17B148BD-8433-4A7D-99E3-828A516C657F}.Debug|x86.ActiveCfg = Debug|Win32
+		{17B148BD-8433-4A7D-99E3-828A516C657F}.Debug|x86.Build.0 = Debug|Win32
+		{17B148BD-8433-4A7D-99E3-828A516C657F}.Release|x86.ActiveCfg = Release|Win32
+		{17B148BD-8433-4A7D-99E3-828A516C657F}.Release|x86.Build.0 = Release|Win32
 		{0BFF89F3-1A79-4B83-A0EB-7C16FDA662E1}.Debug|x86.ActiveCfg = Debug|Win32
 		{0BFF89F3-1A79-4B83-A0EB-7C16FDA662E1}.Debug|x86.Build.0 = Debug|Win32
+		{0BFF89F3-1A79-4B83-A0EB-7C16FDA662E1}.Debug|x86.Deploy.0 = Debug|Win32
 		{0BFF89F3-1A79-4B83-A0EB-7C16FDA662E1}.Release|x86.ActiveCfg = Release|Win32
 		{0BFF89F3-1A79-4B83-A0EB-7C16FDA662E1}.Release|x86.Build.0 = Release|Win32
+		{0BFF89F3-1A79-4B83-A0EB-7C16FDA662E1}.Release|x86.Deploy.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -350,11 +347,8 @@ Global
 		{40A83E3A-0B83-4640-89C8-5685B9A01734} = {E5B29A97-6872-426A-922D-E5C9D9668483}
 		{72F6555D-190E-46C4-82CD-AF0A4451AE86} = {E5B29A97-6872-426A-922D-E5C9D9668483}
 		{822E40D2-80A1-46EB-AD93-EC28C4F145ED} = {A7E7DB91-6013-4894-B0A8-C254F53E4940}
-<<<<<<< HEAD
 		{C9EC47DA-88D2-4634-8C3F-A23E3B1FAF6D} = {A7E7DB91-6013-4894-B0A8-C254F53E4940}
-=======
 		{0D760210-5AB2-4F60-AB46-AA34756861F5} = {E5B29A97-6872-426A-922D-E5C9D9668483}
->>>>>>> 5f7f0cc06fa32c9771b5a12b3d654bb698e63070
 		{0BFF89F3-1A79-4B83-A0EB-7C16FDA662E1} = {A7E7DB91-6013-4894-B0A8-C254F53E4940}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution

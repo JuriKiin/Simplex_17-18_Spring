@@ -15,6 +15,8 @@ class MyCamera
 	vector3 m_v3Position = vector3(0.0f, 0.0f, 10.0f); //Where my camera is located
 	vector3 m_v3Target = vector3(0.0f, 0.0f, 0.0f); //What I'm looking at
 	vector3 m_v3Up = vector3(0.0f, 1.0f, 0.0f); //What is up
+	vector3 m_v3Forward = vector3(0.0f,0.0f,1.0f);
+	glm::mat3 rotMatrix;
 
 	bool m_bPerspective = true; //perspective view? False is Orthographic
 
@@ -116,6 +118,9 @@ public:
 	*/
 	vector3 GetTarget(void);
 
+	vector3 GetForward(void);
+	void SetForward(vector3 target);
+
 	/*
 	USAGE: Sets the position of the camera
 	ARGUMENTS: vector3 a_v3Up -> What up means in the world
@@ -174,6 +179,8 @@ public:
 	*/
 	matrix4 GetProjectionMatrix(void);
 
+	matrix3 GetRotMatrix(void);
+	void SetRotMatrix(glm::mat3 target);
 	/*
 	USAGE: Gets the view matrix of the camera
 	ARGUMENTS: ---
