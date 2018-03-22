@@ -6,9 +6,14 @@ void Simplex::MyCamera::SetPosition(vector3 a_v3Position) { m_v3Position = a_v3P
 vector3 Simplex::MyCamera::GetPosition(void) { return m_v3Position; }
 
 void Simplex::MyCamera::SetTarget(vector3 a_v3Target) { m_v3Target = a_v3Target; }
+<<<<<<< HEAD
 void Simplex::MyCamera::SetUp(vector3 a_v3Up) { m_v3Up = a_v3Up; }
 glm::mat3 Simplex::MyCamera::GetRotMatrix() { return rotMatrix; }
 void Simplex::MyCamera::SetRotMatrix(glm::mat3 target) { rotMatrix = target; }
+=======
+
+void Simplex::MyCamera::SetUp(vector3 a_v3Up) { m_v3Above = a_v3Up; }
+>>>>>>> d492d403fca24abb1b8d3361a3b66f4667ab65e2
 
 vector3 Simplex::MyCamera::GetUp() { return m_v3Up; }
 vector3 Simplex::MyCamera::GetTarget() { return m_v3Target; }
@@ -43,7 +48,7 @@ Simplex::MyCamera::MyCamera(MyCamera const& other)
 {
 	m_v3Position = other.m_v3Position;
 	m_v3Target = other.m_v3Target;
-	m_v3Up = other.m_v3Up;
+	m_v3Above = other.m_v3Above;
 
 	m_bPerspective = other.m_bPerspective;
 
@@ -64,7 +69,7 @@ MyCamera& Simplex::MyCamera::operator=(MyCamera const& other)
 	if (this != &other)
 	{
 		Release();
-		SetPositionTargetAndUp(other.m_v3Position, other.m_v3Target, other.m_v3Up);
+		SetPositionTargetAndUp(other.m_v3Position, other.m_v3Target, other.m_v3Above);
 		MyCamera temp(other);
 		Swap(temp);
 	}
@@ -88,7 +93,7 @@ void Simplex::MyCamera::Swap(MyCamera & other)
 {
 	std::swap(m_v3Position, other.m_v3Position);
 	std::swap(m_v3Target, other.m_v3Target);
-	std::swap(m_v3Up, other.m_v3Up);
+	std::swap(m_v3Above, other.m_v3Above);
 
 	std::swap(m_bPerspective, other.m_bPerspective);
 
@@ -113,7 +118,7 @@ void Simplex::MyCamera::ResetCamera(void)
 {
 	m_v3Position = vector3(0.0f, 0.0f, 10.0f); //Where my camera is located
 	m_v3Target = vector3(0.0f, 0.0f, 0.0f); //What I'm looking at
-	m_v3Up = vector3(0.0f, 1.0f, 0.0f); //What is up
+	m_v3Above = vector3(0.0f, 1.0f, 0.0f); //What is up
 
 	m_bPerspective = true; //perspective view? False is Orthographic
 
@@ -133,14 +138,18 @@ void Simplex::MyCamera::SetPositionTargetAndUp(vector3 a_v3Position, vector3 a_v
 {
 	m_v3Position = a_v3Position;
 	m_v3Target = a_v3Target;
+<<<<<<< HEAD
 	m_v3Up = a_v3Upward;
+=======
+	m_v3Above = a_v3Position + a_v3Upward;
+>>>>>>> d492d403fca24abb1b8d3361a3b66f4667ab65e2
 	CalculateProjectionMatrix();
 }
 
 void Simplex::MyCamera::CalculateViewMatrix(void)
 {
 	//Calculate the look at
-	m_m4View = glm::lookAt(m_v3Position, m_v3Target, m_v3Up);
+	m_m4View = glm::lookAt(m_v3Position, m_v3Target, m_v3Above);
 }
 
 void Simplex::MyCamera::CalculateProjectionMatrix(void)

@@ -14,9 +14,13 @@ class MyCamera
 {
 	vector3 m_v3Position = vector3(0.0f, 0.0f, 10.0f); //Where my camera is located
 	vector3 m_v3Target = vector3(0.0f, 0.0f, 0.0f); //What I'm looking at
+<<<<<<< HEAD
 	vector3 m_v3Up = vector3(0.0f, 1.0f, 0.0f); //What is up
 	vector3 m_v3Forward = vector3(0.0f,0.0f,1.0f);
 	glm::mat3 rotMatrix;
+=======
+	vector3 m_v3Above = vector3(0.0f, 1.0f, 0.0f); //What is above the camera
+>>>>>>> d492d403fca24abb1b8d3361a3b66f4667ab65e2
 
 	bool m_bPerspective = true; //perspective view? False is Orthographic
 
