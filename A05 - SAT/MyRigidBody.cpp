@@ -276,16 +276,106 @@ void MyRigidBody::AddToRenderList(void)
 
 uint MyRigidBody::SAT(MyRigidBody* const a_pOther)
 {
-	/*
-	Your code goes here instead of this comment;
+	float ourValue, otherValue;	//Floats to store values for the test
+	vector3 axis[3], otherAxis[3]; 	//Lists of the objects axis
 
-	For this method, if there is an axis that separates the two objects
-	then the return will be different than 0; 1 for any separating axis
-	is ok if you are not going for the extra credit, if you could not
-	find a separating axis you need to return 0, there is an enum in
-	Simplex that might help you [eSATResults] feel free to use it.
-	(eSATResults::SAT_NONE has a value of 0)
-	*/
+	vector4 axisTemp[3], otherTempAxis[3]; 	//Temp vec4 for making them into world space.
+
+	vector3 halfWidth = GetHalfWidth(); 	//Get the halfwidths of our object.
+	vector3 otherHalfWidth = a_pOther->GetHalfWidth();	//Get the halfwidth of the other object.
+
+	//Move the temp vectors into worldSpace.
+	axisTemp[0] = GetModelMatrix() * vector4(1, 0, 0, 0);
+	axisTemp[1] = GetModelMatrix() * vector4(0, 1, 0, 0);
+	axisTemp[2] = GetModelMatrix() * vector4(0, 0, 1, 0);
+	otherTempAxis[0] = a_pOther->GetModelMatrix() * vector4(1, 0, 0, 0);
+	otherTempAxis[1] = a_pOther->GetModelMatrix() * vector4(0, 1, 0, 0);
+	otherTempAxis[2] = a_pOther->GetModelMatrix() * vector4(0, 0, 1, 0);
+
+	//Set the axis with the new world space axis.
+	for (int i = 0; i < 3; i++) {
+		axis[i] = vector3(axisTemp[i].x, axisTemp[i].y, axisTemp[i].z);
+		otherAxis[i] = vector3(otherTempAxis[i].x, otherTempAxis[i].y, otherTempAxis[i].z);
+	}
+
+	matrix3 ourMat, otherMat; 	//Matrices for each object. We compute the cross product with these.
+
+	//Compute the rotation matrix
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < 3; j++) {
+			ourMat[i][j] = glm::dot(axis[i], otherAxis[j]);
+		}
+	}
+
+	vector3 translationVector = a_pOther->GetCenterGlobal() - GetCenterGlobal(); 	//Get the translation vector from the two objects.
+	//Convert the translation vector.
+	translationVector = vector3(glm::dot(translationVector, axis[0]), glm::dot(translationVector, axis[1]), glm::dot(translationVector, axis[2]));
+
+	//Compute common subexpressions
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < 3; j++) {
+			otherMat[i][j] = glm::abs(ourMat[i][j]) + 0.0000001;
+		}
+	}
+
+	//Test our 3 axis (tests 1-3)
+	for (int i = 0; i < 3; i++) {
+		ourValue = halfWidth[i];
+		otherValue = otherHalfWidth[0] * otherMat[i][0] + otherHalfWidth[1] * otherMat[i][1] + otherHalfWidth[2] * otherMat[i][2];
+		if (glm::abs(translationVector[i]) > ourValue + otherValue) return 1;
+	}
+
+	//Test other objects 3 axis (tests 4-6)
+	for (int i = 0; i < 3; i++) {
+		ourValue = halfWidth[0] * otherMat[0][1] + halfWidth[1] * otherMat[1][i] + halfWidth[2] * otherMat[2][i];
+		otherValue = otherHalfWidth[i];
+		if (glm::abs(translationVector[0] * ourMat[0][i] + translationVector[1] * ourMat[1][i] + translationVector[2] * ourMat[2][i]) > ourValue + otherValue) return 1;
+	}
+
+	//Test 7
+	ourValue = halfWidth[1] * otherMat[2][0] + halfWidth[2] * otherMat[1][0];
+	otherValue = otherHalfWidth[1] * otherMat[0][2] + otherHalfWidth[2] * otherMat[0][1];
+	if (glm::abs(translationVector[2] * ourMat[1][0] - translationVector[1] * ourMat[2][0]) > ourValue + otherValue) return 1;
+
+	//Test 8
+	ourValue = halfWidth[1] * otherMat[2][1] + halfWidth[2] * otherMat[1][1];
+	otherValue = otherHalfWidth[0] * otherMat[0][2] + otherHalfWidth[2] * otherMat[0][0];
+	if (glm::abs(translationVector[2] * ourMat[1][1] - translationVector[1] * ourMat[2][1]) > ourValue + otherValue) return 1;
+
+	//Test 9
+	ourValue = halfWidth[1] * otherMat[2][2] + halfWidth[2] * otherMat[1][2];
+	otherValue = otherHalfWidth[0] * otherMat[0][1] + otherHalfWidth[1] * otherMat[0][0];
+	if (glm::abs(translationVector[2] * ourMat[1][2] - translationVector[1] * ourMat[2][2]) > ourValue + otherValue) return 1;
+
+	//Test 10
+	ourValue = halfWidth[0] * otherMat[2][0] + halfWidth[2] * otherMat[0][0];
+	otherValue = otherHalfWidth[1] * otherMat[1][2] + otherHalfWidth[2] * otherMat[1][1];
+	if (glm::abs(translationVector[0] * ourMat[2][0] - translationVector[2] * ourMat[0][0]) > ourValue + otherValue) return 1;
+
+	//Test 11
+	ourValue = halfWidth[0] * otherMat[2][1] + halfWidth[2] * otherMat[0][1];
+	otherValue = otherHalfWidth[0] * otherMat[1][2] + otherHalfWidth[2] * otherMat[1][0];
+	if (glm::abs(translationVector[0] * ourMat[2][1] - translationVector[2] * ourMat[0][1]) > ourValue + otherValue) return 1;
+
+	//Test 12
+	ourValue = halfWidth[0] * otherMat[2][2] + halfWidth[2] * otherMat[0][2];
+	otherValue = otherHalfWidth[0] * otherMat[1][1] + otherHalfWidth[1] * otherMat[1][0];
+	if (glm::abs(translationVector[0] * ourMat[2][2] - translationVector[2] * ourMat[0][2]) > ourValue + otherValue) return 1;
+
+	//Test 13
+	ourValue = halfWidth[0] * otherMat[1][0] + halfWidth[1] * otherMat[0][0];
+	otherValue = otherHalfWidth[1] * otherMat[2][2] + otherHalfWidth[2] * otherMat[2][1];
+	if (glm::abs(translationVector[1] * ourMat[0][0] - translationVector[0] * ourMat[0][0]) > ourValue + otherValue) return 1;
+
+	//Test 14
+	ourValue = halfWidth[0] * otherMat[1][0] + halfWidth[1] * otherMat[0][0];
+	otherValue = otherHalfWidth[0] * otherMat[2][2] + otherHalfWidth[2] * otherMat[2][0];
+	if (glm::abs(translationVector[1] * ourMat[0][1] - translationVector[0] * ourMat[1][1]) > ourValue + otherValue) return 1;
+
+	//Test 15
+	ourValue = halfWidth[0] * otherMat[1][2] + halfWidth[1] * otherMat[0][2];
+	otherValue = otherHalfWidth[0] * otherMat[2][1] + otherHalfWidth[1] * otherMat[2][0];
+	if (glm::abs(translationVector[1] * ourMat[0][2] - translationVector[0] * ourMat[1][2]) > ourValue + otherValue) return 1;
 
 	//there is no axis test that separates this two objects
 	return eSATResults::SAT_NONE;
