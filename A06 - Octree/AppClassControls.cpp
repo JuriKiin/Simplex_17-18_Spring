@@ -111,40 +111,32 @@ void Application::ProcessKeyReleased(sf::Event a_event)
 		bFPSControl = !bFPSControl;
 		m_pCameraMngr->SetFPS(bFPSControl);
 		break;
-	case sf::Keyboard::PageUp:
+	case sf::Keyboard::N:
 		++m_uOctantID;
-		/*
 		if (m_uOctantID >= m_pRoot->GetOctantCount())
 			m_uOctantID = - 1;
-		*/
 		break;
-	case sf::Keyboard::PageDown:
+	case sf::Keyboard::M:
 		--m_uOctantID;
-		/*
 		if (m_uOctantID >= m_pRoot->GetOctantCount())
 			m_uOctantID = - 1;
-		*/
 		break;
-	case sf::Keyboard::Add:
+	case sf::Keyboard::J:
 		if (m_uOctantLevels < 4)
 		{
 			m_pEntityMngr->ClearDimensionSetAll();
 			++m_uOctantLevels;
-			/*
 			SafeDelete(m_pRoot);
 			m_pRoot = new MyOctant(m_uOctantLevels, 5);
-			*/
 		}
 		break;
-	case sf::Keyboard::Subtract:
+	case sf::Keyboard::K:
 		if (m_uOctantLevels > 0)
 		{
 			m_pEntityMngr->ClearDimensionSetAll();
 			--m_uOctantLevels;
-			/*
 			SafeDelete(m_pRoot);
 			m_pRoot = new MyOctant(m_uOctantLevels, 5);
-			*/
 		}
 		break;
 	case sf::Keyboard::LShift:

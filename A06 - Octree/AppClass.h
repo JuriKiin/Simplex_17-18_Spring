@@ -11,6 +11,7 @@ Date: 2017/06
 #include "imgui\ImGuiObject.h"
 
 #include "MyEntityManager.h"
+#include "MyOctant.h"
 
 namespace Simplex
 {
@@ -22,7 +23,7 @@ class Application
 	uint m_uObjects = 0; //Number of objects in the scene
 	uint m_uOctantLevels = 0; //Number of levels in the octree
 private:
-	String m_sProgrammer = "Alberto Bobadilla - labigm@rit.edu"; //programmer
+	String m_sProgrammer = "Juri Kiin - jak5125@rit.edu"; //programmer
 
 	static ImGuiObject gui; //GUI object
 	bool m_bGUI_Main = true; //show Main GUI window?
@@ -36,6 +37,8 @@ private:
 	bool m_bFocused = true; //is the window focused?
 
 	float m_fMovementSpeed = 0.1f; //how fast the camera will move
+
+	MyOctant*  m_pRoot = nullptr;
 
 	vector3 m_v3Mouse = vector3(); //position of the mouse in the window
 	bool m_bFPC = false;// First Person Camera flag
